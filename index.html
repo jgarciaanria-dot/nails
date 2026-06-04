@@ -339,8 +339,6 @@ function renderTimes(){
     const label=tkn?t+' <span style="font-size:9px;display:block;">ocupada</span>':t;
     return '<div class="ts'+(tkn?' tkn':'')+(sel?' sel':'')+'" '+(tkn?'':'onclick="selTime2(''+t+'')"')+'>'+label+'</div>';
   }).join('');
-}${sel?' sel':''}" ${!tkn?`onclick="selTime2('${t}')"`:''}>${t}</div>`;
-  }).join('');
 }
 
 function selTime2(t){
