@@ -21,13 +21,10 @@ const CONFIG = {
   },
 
   // ── GOOGLE SHEETS ────────────────────────────────────────
-  sheets: {
-    // ID del Google Sheet (está en la URL: .../spreadsheets/d/ESTE_ID/edit)
-    sheetId: "1AjLRrAbwhsq-hu4hMBdJJdC4mfZ8hLLVDedYT4iLeik",
-    // Nombre de la hoja (pestaña)
-    sheetName: "Citas",
-    // API Key de Google (Google Cloud Console → APIs → Sheets API → Credenciales)
-    apiKey: "AIzaSyDjFFbvoK8AY6nxbqlobaJEh4e-bDDYke4",
+sheets: {
+  scriptUrl: "https://script.google.com/macros/s/AKfycbzoLzn5BL0-LXxx2mnUkv4N2-lG7qyrswbhKVc6FhBd2EnbYMC-Uhst2YHQl8DKXqe8og/exec",
+  sheetName: "Citas",
+  apiKey: "AIzaSyDjFFbvoK8AY6nxbqlobaJEh4e-bDDYke4",
   },
 
   // ── NEGOCIO ──────────────────────────────────────────────
