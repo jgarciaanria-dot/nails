@@ -22,7 +22,7 @@ const CONFIG = {
 
   // ── GOOGLE SHEETS ────────────────────────────────────────
 sheets: {
-  scriptUrl: "https://script.google.com/macros/s/AKfycbyrOsrvN_hHHIXZ-hQn6AZEoZ5lr0Pd1FXzNDaVKbe8PxAaeTbNOeghXT_jDcxSHS0mDw/exec",
+  scriptUrl: "https://script.google.com/macros/s/AKfycbxCF9ZnZ6kl-utAZmVa0BxFmNRSyfazgwMr8eYapJvXcRROslzDCa8_38leqWp4Wo7SfQ/exec",
   sheetName: "Citas",
   apiKey: "AIzaSyDjFFbvoK8AY6nxbqlobaJEh4e-bDDYke4",
   },
