@@ -9,7 +9,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:#f8f5f5;color:#2c2c2a;min-height:100vh;}
-:root{--pink:#D4537E;--pink-light:#FBEAF0;--pink-mid:#F4C0D1;--pink-dark:#72243E;--gray:#888780;--radius:10px;--radius-lg:14px;}
+:root{
+  --pink:#D4537E;--pink-light:#FBEAF0;--pink-dark:#72243E;
+  --yappy-blue:#1AACE3;--yappy-orange:#F5821F;
+  --bank-blue:#1a4b8c;
+  --radius:10px;--radius-lg:14px;
+}
+
+/* WHATSAPP FLOTANTE */
+.wa-float{position:fixed;bottom:20px;right:20px;z-index:999;width:52px;height:52px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,.4);text-decoration:none;transition:transform .15s;}
+.wa-float:hover{transform:scale(1.08);}
+.wa-float svg{width:28px;height:28px;fill:white;}
 
 /* HEADER */
 .header{text-align:center;padding:2rem 1.5rem 1.5rem;background:white;border-bottom:1px solid #f0eaea;}
@@ -21,8 +31,10 @@ h1{font-size:18px;font-weight:600;margin-bottom:6px;}
 /* SERVICIOS */
 .sec-label{padding:1.25rem 1.25rem 0.5rem;font-size:11px;font-weight:600;color:#aaa;letter-spacing:.08em;text-transform:uppercase;}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 1rem 0.5rem;}
+@media(max-width:360px){.grid{grid-template-columns:1fr;}}
 .card{background:white;border:1px solid #f0eaea;border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
-.card:hover{border-color:var(--pink);box-shadow:0 2px 12px rgba(212,83,126,.08);}
+.card:active{border-color:var(--pink);}
+@media(hover:hover){.card:hover{border-color:var(--pink);box-shadow:0 2px 12px rgba(212,83,126,.08);}}
 .card-top{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
 .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .card-name{font-size:13px;font-weight:600;color:#2c2c2a;flex:1;}
@@ -30,15 +42,17 @@ h1{font-size:18px;font-weight:600;margin-bottom:6px;}
 .card-footer{display:flex;align-items:center;justify-content:space-between;}
 .price{font-size:13px;font-weight:600;color:var(--pink);}
 .dur{font-size:11px;color:#bbb;}
-.pb{padding-bottom:2rem;}
+.pb{padding-bottom:5rem;}
 
 /* OVERLAY */
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center;padding:0;}
 .ov.open{display:flex;}
-.panel{background:white;border-radius:var(--radius-lg);width:100%;max-width:460px;overflow:hidden;margin:auto;}
-.phdr{padding:1rem 1.25rem;border-bottom:1px solid #f0eaea;display:flex;align-items:center;justify-content:space-between;}
+@media(min-width:500px){.ov{align-items:center;padding:1rem;}}
+.panel{background:white;border-radius:var(--radius-lg) var(--radius-lg) 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+@media(min-width:500px){.panel{border-radius:var(--radius-lg);max-height:88vh;}}
+.phdr{padding:1rem 1.25rem;border-bottom:1px solid #f0eaea;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:white;z-index:1;}
 .ptitle{font-size:15px;font-weight:600;}
-.pclose{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;line-height:1;padding:0;}
+.pclose{background:none;border:none;font-size:24px;cursor:pointer;color:#aaa;line-height:1;padding:4px;}
 .pbody{padding:1.25rem;}
 
 /* SERVICE DETAIL */
@@ -51,55 +65,74 @@ h1{font-size:18px;font-weight:600;margin-bottom:6px;}
 .includes li{font-size:13px;color:#555;display:flex;align-items:flex-start;gap:8px;}
 .includes li::before{content:"✓";color:var(--pink);font-weight:600;font-size:12px;margin-top:1px;flex-shrink:0;}
 .abono-box{background:#fff8f3;border:1px solid #fcdcbc;border-radius:var(--radius);padding:.875rem;margin-bottom:1rem;}
-.abono-title{font-size:12px;font-weight:600;color:#b05a00;margin-bottom:3px;display:flex;align-items:center;gap:5px;}
-.abono-sub{font-size:12px;color:#c47a1a;line-height:1.5;}
+.abono-title{font-size:12px;font-weight:600;color:#b05a00;margin-bottom:3px;}
+.abono-sub{font-size:12px;color:#c47a1a;line-height:1.6;}
 
 /* BOTONES */
-.btn-main{width:100%;padding:12px;background:var(--pink);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;}
-.btn-main:hover{opacity:.9;}
-.btn-main:disabled{opacity:.4;cursor:default;}
-.btn-ghost{width:100%;padding:10px;background:transparent;color:#aaa;border:1px solid #eee;border-radius:var(--radius);font-size:13px;cursor:pointer;margin-top:8px;}
+.btn-main{width:100%;padding:13px;background:var(--pink);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.btn-main:active{opacity:.85;}
+.btn-main:disabled{opacity:.35;cursor:default;}
+.btn-ghost{width:100%;padding:11px;background:transparent;color:#aaa;border:1px solid #eee;border-radius:var(--radius);font-size:13px;cursor:pointer;margin-top:8px;}
 
 /* CALENDARIO */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .cal-mo{font-size:14px;font-weight:600;}
-.cal-nb{background:none;border:1px solid #eee;border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.cal-nb{background:none;border:1px solid #eee;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
 .cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
 .cdn{text-align:center;font-size:10px;color:#bbb;padding:4px 0;}
-.cd{text-align:center;font-size:12px;padding:7px 2px;border-radius:8px;cursor:pointer;transition:background .12s;}
-.cd:hover:not(.emp):not(.pst):not(.snd):not(.blk){background:var(--pink-light);color:var(--pink);}
+.cd{text-align:center;font-size:12px;padding:8px 2px;border-radius:8px;cursor:pointer;transition:background .12s;}
+.cd:active:not(.emp):not(.pst):not(.snd):not(.blk){background:var(--pink-light);color:var(--pink);}
 .cd.sel{background:var(--pink);color:white;font-weight:600;}
 .cd.hoy{font-weight:700;}
 .cd.emp,.cd.pst,.cd.snd,.cd.blk{color:#ddd;cursor:default;}
 .cd.blk{text-decoration:line-through;}
 .time-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:.875rem;}
-.ts{border:1px solid #eee;border-radius:8px;padding:7px 3px;text-align:center;font-size:12px;cursor:pointer;transition:all .12s;}
-.ts:hover:not(.tkn){border-color:var(--pink);color:var(--pink);}
+.ts{border:1px solid #eee;border-radius:8px;padding:10px 3px;text-align:center;font-size:13px;cursor:pointer;transition:all .12s;}
+.ts:active:not(.tkn){border-color:var(--pink);color:var(--pink);}
 .ts.sel{background:var(--pink);color:white;border-color:var(--pink);font-weight:600;}
 .ts.tkn{opacity:.25;cursor:default;text-decoration:line-through;}
 
 /* FORM */
 .fg{margin-bottom:.75rem;}
 .flbl{font-size:11px;font-weight:600;color:#aaa;margin-bottom:4px;display:block;letter-spacing:.04em;text-transform:uppercase;}
-.fi{width:100%;padding:9px 11px;font-size:13px;border:1px solid #eee;border-radius:8px;color:#2c2c2a;font-family:inherit;transition:border-color .15s;}
+.fi{width:100%;padding:11px;font-size:14px;border:1px solid #eee;border-radius:8px;color:#2c2c2a;font-family:inherit;transition:border-color .15s;}
 .fi:focus{outline:none;border-color:var(--pink);}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-textarea.fi{resize:vertical;}
+@media(max-width:340px){.frow{grid-template-columns:1fr;}}
 
 /* PAGO */
 .step-row{display:flex;align-items:center;gap:8px;margin-bottom:1rem;}
-.stepn{width:22px;height:22px;border-radius:50%;background:var(--pink);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stepn{width:24px;height:24px;border-radius:50%;background:var(--pink);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .step-lbl{font-size:13px;font-weight:600;}
-.pay-opt{border:1.5px solid #eee;border-radius:var(--radius);padding:.875rem;margin-bottom:8px;cursor:pointer;transition:border-color .15s;}
-.pay-opt:hover,.pay-opt.sel{border-color:var(--pink);}
-.pay-opt-title{font-size:13px;font-weight:600;margin-bottom:2px;}
-.pay-opt-sub{font-size:11px;color:#999;line-height:1.5;}
-.pay-link{display:block;width:100%;padding:11px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;margin-bottom:8px;}
+
+/* OPCIONES DE PAGO */
+.pay-opt{border:2px solid #eee;border-radius:var(--radius);padding:1rem;margin-bottom:8px;cursor:pointer;transition:border-color .15s;}
+.pay-opt.sel{border-color:var(--yappy-blue);}
+.pay-opt-header{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.pay-badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;}
+.badge-yappy{background:#e8f7fd;color:var(--yappy-blue);}
+.badge-bank{background:#e8eef8;color:var(--bank-blue);}
+.pay-opt-title{font-size:13px;font-weight:600;}
+.pay-opt-sub{font-size:12px;color:#999;line-height:1.5;margin-top:3px;}
+.pay-detail{background:#f8faff;border-radius:8px;padding:.75rem;margin-top:8px;font-size:12px;color:#444;line-height:1.8;display:none;}
+.pay-opt.sel .pay-detail{display:block;}
+.pay-detail strong{color:#1a4b8c;}
+
+/* BOTONES PAGO */
+.btn-yappy{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;border:none;margin-bottom:8px;transition:opacity .15s;}
+.btn-yappy{background:linear-gradient(135deg,var(--yappy-blue),#0f8fc7);color:white;}
+.btn-yappy:active{opacity:.85;}
+.btn-yappy.hidden{display:none;}
+.btn-transfer{display:none;width:100%;padding:13px;background:var(--bank-blue);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;}
+.btn-transfer.visible{display:block;}
 
 /* TIMER */
-.timer-box{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);padding:.875rem;display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
-.timer-val{font-size:20px;font-weight:700;color:#b45309;min-width:54px;}
-.timer-lbl{font-size:11px;color:#92400e;line-height:1.5;}
+.timer-box{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);padding:.875rem;display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.timer-val{font-size:22px;font-weight:700;color:#b45309;min-width:50px;}
+.timer-lbl{font-size:11px;color:#92400e;line-height:1.6;}
+.timer-box.expired{background:#fee2e2;border-color:#fca5a5;}
+.timer-box.expired .timer-val{color:#991b1b;}
+.timer-box.expired .timer-lbl{color:#991b1b;}
 
 /* ÉXITO */
 .success-wrap{text-align:center;padding:1.5rem 1rem 1rem;}
@@ -111,6 +144,13 @@ textarea.fi{resize:vertical;}
 </style>
 </head>
 <body>
+
+<!-- WHATSAPP FLOTANTE -->
+<a class="wa-float" href="https://wa.me/50765224575" target="_blank" aria-label="Contactar por WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
 
 <div class="header">
   <div class="logo-c"><span class="logo-t">VS</span></div>
@@ -144,7 +184,7 @@ textarea.fi{resize:vertical;}
         <p style="font-size:11px;color:#bbb;margin-top:.875rem;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;">Horas disponibles</p>
         <div class="time-g" id="timeGrid"></div>
       </div>
-      <button class="btn-main" style="margin-top:1rem;" id="btnContinue" disabled onclick="goForm()">Continuar</button>
+      <button class="btn-main" style="margin-top:1rem;" id="btnContinue" disabled onclick="goForm()">Continuar →</button>
     </div>
   </div>
 </div>
@@ -164,60 +204,34 @@ textarea.fi{resize:vertical;}
 const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const TIMES=['9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30','1:00','1:30','2:00','2:30','3:00','3:30','4:00','4:30','5:00','5:30','6:00','6:30'];
 const TAKEN=['10:00','2:00'];
+const YAPPY_LINK='https://link.yappy.com.pa/stc/2hBGYbVYhu3%2B2FnyEZag5BSk16Vdr9BZvaim7nGhYrA%3D';
 const DOTS={mantra:'#D4537E',mansemi:'#993556',rubgel:'#ED93B1',polynat:'#F0997B',polyext:'#D85A30',relleno:'#F5C4B3',retiro:'#888780',pedicura:'#1D9E75',pedisemi:'#0F6E56',spasemi:'#5DCAA5',jellysemi:'#9FE1CB',jellyregular:'#B5D4F4',sparegular:'#85B7EB',combo:'#7F77DD'};
 
-let SERVICES=[
-  {id:'mantra',name:'Manicure Tradicional',cat:'Manicure',price:15,dur:'30 min',active:true,
-   desc:'Servicio clásico de manicure que incluye limado, perfilado y todo el cuidado de tu cutícula para unas manos perfectas. Ideal para el mantenimiento semanal.',
-   includes:['Lima y forma de uña','Reblandecimiento de cutícula','Retiro de cutícula','Esmaltado regular a elección','Hidratación de manos']},
-  {id:'mansemi',name:'Manicura Semipermanente',cat:'Manicure',price:25,dur:'45 min',active:true,
-   desc:'Esmaltado semipermanente de gel que dura hasta 3 semanas sin descascararse ni perder brillo. Perfecto para quienes buscan durabilidad y un acabado impecable.',
-   includes:['Lima y forma de uña','Cuidado de cutícula','Esmaltado gel semipermanente UV','Curado en lámpara LED','Hidratación final']},
-  {id:'rubgel',name:'Rubber Gel',cat:'Manicure',price:30,dur:'60 min',active:true,
-   desc:'Técnica de gel flexible que refuerza la uña natural sin dañarla. Da un acabado natural y brillante con mayor resistencia a golpes y quiebres.',
-   includes:['Preparación de uña natural','Aplicación de base rubber gel','Gel de color a elección','Curado UV/LED','Sellado y brillo final']},
-  {id:'polynat',name:'Polygel Uña Natural',cat:'Manicure',price:30,dur:'60 min',active:true,
-   desc:'El polygel combina lo mejor del acrílico y el gel para un resultado más liviano y natural. Ideal para fortalecer tu uña sin extensiones.',
-   includes:['Limpieza y deshidratación','Aplicación de polygel sobre uña natural','Moldeo y forma a gusto','Esmaltado o gel de color','Acabado de brillo o mate']},
-  {id:'polyext',name:'Polygel Extensión',cat:'Manicure',price:35,dur:'75 min',active:true,
-   desc:'¿Quieres más longitud? Con polygel sobre forma creamos la extensión que deseas. Mayor control de forma y longitud, resultado liviano y duradero.',
-   includes:['Preparación de uña natural','Colocación de forma/tip','Aplicación y esculpido de polygel','Limado y forma final','Color o diseño a elección']},
-  {id:'relleno',name:'Relleno',cat:'Manicure',price:30,dur:'60 min',active:true,
-   desc:'Mantenimiento de tus uñas acrílicas o de polygel cada 3-4 semanas. Se rellena el espacio del crecimiento para que luzcan como recién hechas.',
-   includes:['Retiro de esmaltado anterior','Limado del levantamiento','Relleno de zona de crecimiento','Sellado y rediseño de forma','Nuevo esmaltado o diseño']},
-  {id:'retiro',name:'Retiro Manos y Pies',cat:'Manicure',price:5,dur:'20 min',active:true,
-   desc:'Retiro seguro y sin daño de esmalte regular, semipermanente o gel. Proceso gentil que protege tu uña natural.',
-   includes:['Aplicación de acetona especializada','Retiro cuidadoso con empujador','Limpieza y suavizado','Sin daño a la lámina natural']},
-  {id:'pedicura',name:'Pedicura Regular',cat:'Pedicura',price:20,dur:'45 min',active:true,
-   desc:'Pedicura clásica para mantener tus pies suaves, limpios y con un color que te encante. Ideal para el mantenimiento quincenal.',
-   includes:['Remojo y suavizado de pies','Lima de callosidades','Lima y forma de uña del pie','Cuidado de cutícula','Esmaltado regular a elección']},
-  {id:'pedisemi',name:'Pedicura Semipermanente',cat:'Pedicura',price:30,dur:'60 min',active:true,
-   desc:'Todo el cuidado de una pedicura tradicional más el acabado duradero del gel semipermanente. Tus pies perfectos por semanas.',
-   includes:['Remojo y exfoliación','Lima de callosidades','Cuidado de cutícula','Esmaltado gel semipermanente','Curado en lámpara']},
-  {id:'spasemi',name:'Spa + Semipermanente',cat:'Pedicura',price:40,dur:'75 min',active:true,
-   desc:'Experiencia completa de spa para tus pies: exfoliación, masaje y el acabado duradero del semipermanente. Un lujo que te mereces.',
-   includes:['Remojo en sales aromáticas','Exfoliación de pies y talones','Masaje relajante','Cuidado de cutícula','Esmaltado semipermanente gel']},
-  {id:'jellysemi',name:'Jelly Spa + Semi',cat:'Pedicura',price:40,dur:'75 min',active:true,
-   desc:'El baño jelly es una experiencia única: una gelatina suave y perfumada que hidrata profundamente mientras relajas tus pies. Incluye semipermanente.',
-   includes:['Baño jelly hidratante perfumado','Exfoliación suave','Masaje con crema nutritiva','Cuidado de cutícula','Esmaltado semipermanente UV']},
-  {id:'jellyregular',name:'Jelly Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,
-   desc:'Todos los beneficios del baño jelly hidratante más el esmaltado regular. Perfecta combinación de relajación y belleza.',
-   includes:['Baño jelly hidratante','Exfoliación','Masaje relajante','Cuidado de cutícula','Esmaltado regular a elección']},
-  {id:'sparegular',name:'Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,
-   desc:'Pedicura spa con exfoliación, masaje y esmaltado regular. El cuidado completo que tus pies necesitan a un precio accesible.',
-   includes:['Remojo en sales','Exfoliación de talones','Masaje relajante','Cuidado de cutícula','Esmaltado regular a elección']},
-  {id:'combo',name:'Manos + Pies Semipermanente',cat:'Combo',price:45,dur:'90 min',active:true,
-   desc:'El combo más completo: manicura y pedicura semipermanente en una sola sesión. Manos y pies perfectos con el mejor precio.',
-   includes:['Manicura semipermanente completa','Pedicura semipermanente completa','Color coordinado o diferente a elección','Curado UV/LED','Duración hasta 3 semanas']},
-];
-
-// Cargar servicios desde localStorage (para que admin sync funcione)
+let SERVICES=[];
 function loadServices(){
   const saved=localStorage.getItem('vss_services');
   if(saved){SERVICES=JSON.parse(saved);}
+  else{
+    SERVICES=[
+      {id:'mantra',name:'Manicure Tradicional',cat:'Manicure',price:15,dur:'30 min',active:true,desc:'Servicio clásico de manicure que incluye limado, perfilado y todo el cuidado de tu cutícula para unas manos perfectas. Ideal para el mantenimiento semanal.',includes:['Lima y forma de uña','Reblandecimiento de cutícula','Retiro de cutícula','Esmaltado regular a elección','Hidratación de manos']},
+      {id:'mansemi',name:'Manicura Semipermanente',cat:'Manicure',price:25,dur:'45 min',active:true,desc:'Esmaltado semipermanente de gel que dura hasta 3 semanas sin descascararse ni perder brillo. Perfecto para quienes buscan durabilidad y un acabado impecable.',includes:['Lima y forma de uña','Cuidado de cutícula','Esmaltado gel semipermanente UV','Curado en lámpara LED','Hidratación final']},
+      {id:'rubgel',name:'Rubber Gel',cat:'Manicure',price:30,dur:'60 min',active:true,desc:'Técnica de gel flexible que refuerza la uña natural sin dañarla. Da un acabado natural y brillante con mayor resistencia a golpes y quiebres.',includes:['Preparación de uña natural','Aplicación de base rubber gel','Gel de color a elección','Curado UV/LED','Sellado y brillo final']},
+      {id:'polynat',name:'Polygel Uña Natural',cat:'Manicure',price:30,dur:'60 min',active:true,desc:'El polygel combina lo mejor del acrílico y el gel para un resultado más liviano y natural. Ideal para fortalecer tu uña sin extensiones.',includes:['Limpieza y deshidratación','Aplicación de polygel sobre uña natural','Moldeo y forma a gusto','Esmaltado o gel de color','Acabado de brillo o mate']},
+      {id:'polyext',name:'Polygel Extensión',cat:'Manicure',price:35,dur:'75 min',active:true,desc:'¿Quieres más longitud? Con polygel sobre forma creamos la extensión que deseas. Mayor control de forma y longitud, resultado liviano y duradero.',includes:['Preparación de uña natural','Colocación de forma/tip','Aplicación y esculpido de polygel','Limado y forma final','Color o diseño a elección']},
+      {id:'relleno',name:'Relleno',cat:'Manicure',price:30,dur:'60 min',active:true,desc:'Mantenimiento de tus uñas acrílicas o de polygel cada 3-4 semanas. Se rellena el espacio del crecimiento para que luzcan como recién hechas.',includes:['Retiro de esmaltado anterior','Limado del levantamiento','Relleno de zona de crecimiento','Sellado y rediseño de forma','Nuevo esmaltado o diseño']},
+      {id:'retiro',name:'Retiro Manos y Pies',cat:'Manicure',price:5,dur:'20 min',active:true,desc:'Retiro seguro y sin daño de esmalte regular, semipermanente o gel. Proceso gentil que protege tu uña natural.',includes:['Aplicación de acetona especializada','Retiro cuidadoso con empujador','Limpieza y suavizado','Sin daño a la lámina natural']},
+      {id:'pedicura',name:'Pedicura Regular',cat:'Pedicura',price:20,dur:'45 min',active:true,desc:'Pedicura clásica para mantener tus pies suaves, limpios y con un color que te encante. Ideal para el mantenimiento quincenal.',includes:['Remojo y suavizado de pies','Lima de callosidades','Lima y forma de uña del pie','Cuidado de cutícula','Esmaltado regular a elección']},
+      {id:'pedisemi',name:'Pedicura Semipermanente',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Todo el cuidado de una pedicura tradicional más el acabado duradero del gel semipermanente. Tus pies perfectos por semanas.',includes:['Remojo y exfoliación','Lima de callosidades','Cuidado de cutícula','Esmaltado gel semipermanente','Curado en lámpara']},
+      {id:'spasemi',name:'Spa + Semipermanente',cat:'Pedicura',price:40,dur:'75 min',active:true,desc:'Experiencia completa de spa para tus pies: exfoliación, masaje y el acabado duradero del semipermanente. Un lujo que te mereces.',includes:['Remojo en sales aromáticas','Exfoliación de pies y talones','Masaje relajante','Cuidado de cutícula','Esmaltado semipermanente gel']},
+      {id:'jellysemi',name:'Jelly Spa + Semi',cat:'Pedicura',price:40,dur:'75 min',active:true,desc:'El baño jelly es una experiencia única: una gelatina suave y perfumada que hidrata profundamente mientras relajas tus pies. Incluye semipermanente.',includes:['Baño jelly hidratante perfumado','Exfoliación suave','Masaje con crema nutritiva','Cuidado de cutícula','Esmaltado semipermanente UV']},
+      {id:'jellyregular',name:'Jelly Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Todos los beneficios del baño jelly hidratante más el esmaltado regular. Perfecta combinación de relajación y belleza.',includes:['Baño jelly hidratante','Exfoliación','Masaje relajante','Cuidado de cutícula','Esmaltado regular a elección']},
+      {id:'sparegular',name:'Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Pedicura spa con exfoliación, masaje y esmaltado regular. El cuidado completo que tus pies necesitan a un precio accesible.',includes:['Remojo en sales','Exfoliación de talones','Masaje relajante','Cuidado de cutícula','Esmaltado regular a elección']},
+      {id:'combo',name:'Manos + Pies Semipermanente',cat:'Combo',price:45,dur:'90 min',active:true,desc:'El combo más completo: manicura y pedicura semipermanente en una sola sesión. Manos y pies perfectos con el mejor precio.',includes:['Manicura semipermanente completa','Pedicura semipermanente completa','Color coordinado o diferente a elección','Curado UV/LED','Duración hasta 3 semanas']},
+    ];
+  }
 }
 
-let curSvc=null, calY, calM, selectedDay=null, selTime=null, timerInt=null, timerSecs=300;
+let curSvc=null,calY,calM,selectedDay=null,selTime=null,timerInt=null,timerSecs=300;
 
 function renderServices(){
   const cats=['Manicure','Pedicura','Combo'];
@@ -253,8 +267,8 @@ function openDetail(id){
     <p class="includes-title">Incluye</p>
     <ul class="includes">${incl}</ul>
     <div class="abono-box">
-      <div class="abono-title">⚠️ Abono requerido para separar cupo</div>
-      <div class="abono-sub">Se requiere un abono de <strong>$15.00</strong> al agendar. Tienes <strong>1 hora</strong> para realizarlo o tu cupo se libera automáticamente.</div>
+      <div class="abono-title">⚠️ Abono obligatorio para separar cupo — No reembolsable</div>
+      <div class="abono-sub">Se requiere un abono de <strong>$15.00</strong> al agendar. Si no asistes sin cancelar con anticipación, el abono no se devuelve. Tienes <strong>5 minutos</strong> para completar el pago o tu cupo se libera automáticamente.</div>
     </div>
     <button class="btn-main" onclick="openCal()">Agendar este servicio →</button>
     <button class="btn-ghost" onclick="closeOv('ov-detail')">Volver</button>`;
@@ -329,11 +343,8 @@ function chMo(d){
 function goForm(){
   closeOv('ov-cal');
   const dayStr=`${selectedDay} de ${MESES[calM]} ${calY}`;
-  const refID='VSN-'+Date.now();
   timerSecs=300;
-  const yappyBase='https://link.yappy.com.pa/stc/2hBGYbVYhu3%2B2FnyEZag5BSk16Vdr9BZvaim7nGhYrA%3D';
-  const linkAbono=yappyBase+'&amount=15.00';
-  const linkTotal=yappyBase;
+  const restante=(curSvc.price-15).toFixed(2);
   document.getElementById('form-body').innerHTML=`
     <div style="background:var(--pink-light);border-radius:var(--radius);padding:10px 12px;margin-bottom:1rem;">
       <div style="font-size:13px;font-weight:600;color:var(--pink-dark);">${curSvc.name}</div>
@@ -346,72 +357,103 @@ function goForm(){
     </div>
     <div class="fg"><label class="flbl">Correo (opcional)</label><input class="fi" id="fe" placeholder="tu@correo.com"/></div>
     <div class="fg"><label class="flbl">Nota (opcional)</label><input class="fi" id="fnote" placeholder="Diseño, color, extensiones..."/></div>
-    <div class="step-row" style="margin-top:1rem;"><span class="stepn">2</span><span class="step-lbl">Abono de $15.00 para separar tu cupo</span></div>
-    <div class="timer-box">
-      <div><div class="timer-val" id="timerVal">5:00</div><div class="timer-lbl">Tienes 5 minutos para pagar el abono.<br>Si no se confirma, el cupo se libera.</div></div>
+
+    <div class="step-row" style="margin-top:1rem;"><span class="stepn">2</span><span class="step-lbl">Abono obligatorio $15.00 — No reembolsable</span></div>
+    <div class="timer-box" id="timerBox">
+      <div class="timer-val" id="timerVal">5:00</div>
+      <div class="timer-lbl">Tienes <strong>5 minutos</strong> para pagar el abono.<br>Si no se confirma, el cupo se libera.</div>
     </div>
-    <div class="pay-opt sel" id="opt-abono" onclick="selPago('abono')">
-      <div class="pay-opt-title">💳 Pagar abono ($15.00)</div>
-      <div class="pay-opt-sub">Separa tu cupo con $15.00 ahora. El restante <strong>$${(curSvc.price-15).toFixed(2)}</strong> lo pagas el día de tu cita.</div>
+
+    <div class="pay-opt sel" id="opt-yappy" onclick="selPago('yappy')">
+      <div class="pay-opt-header">
+        <span class="pay-badge badge-yappy">Yappy</span>
+        <span class="pay-opt-title">Pagar con Yappy</span>
+      </div>
+      <div class="pay-opt-sub">Pago rápido y seguro desde tu app Yappy.</div>
+      <div class="pay-detail">Haz clic en el botón azul, ingresa tu número Yappy y confirma el pago de <strong>$15.00</strong>. Luego copia el número de referencia aquí.</div>
     </div>
-    <div class="pay-opt" id="opt-total" onclick="selPago('total')">
-      <div class="pay-opt-title">✨ Pagar total ($${curSvc.price.toFixed(2)})</div>
-      <div class="pay-opt-sub">Abre Yappy y paga lo que quieras — total, 50% o el monto que prefieras. El resto lo traes el día de la cita.</div>
+
+    <div class="pay-opt" id="opt-bank" onclick="selPago('bank')">
+      <div class="pay-opt-header">
+        <span class="pay-badge badge-bank">Transferencia</span>
+        <span class="pay-opt-title">Transferencia bancaria</span>
+      </div>
+      <div class="pay-opt-sub">Banco General — cuenta de ahorros.</div>
+      <div class="pay-detail">
+        <strong>Banco:</strong> Banco General<br>
+        <strong>Tipo:</strong> Ahorros<br>
+        <strong>Cuenta:</strong> 04-19-99-989328-0<br>
+        <strong>Titular:</strong> Vicelly Sanchez Studio<br>
+        <strong>Monto:</strong> $15.00<br>
+        <span style="color:#e74c3c;font-size:11px;">⚠️ Incluye tu nombre en la referencia</span>
+      </div>
     </div>
-    <div class="fg" style="margin-top:.875rem;"><label class="flbl">N° de comprobante / referencia</label><input class="fi" id="fref" placeholder="Ej: YAPPY-20240601"/></div>
-    <a id="btnYappy" href="${linkAbono}" target="_blank" class="pay-link">💚 Pagar $15.00 con Yappy (abono)</a>
-    <button class="btn-main" onclick="confirmar('${dayStr}','${refID}')">Confirmar mi cita</button>`;
-  window._linkAbono=linkAbono; window._linkTotal=linkTotal; window._precioTotal=curSvc.price;
+
+    <div class="fg" style="margin-top:.875rem;"><label class="flbl">N° de comprobante / referencia</label><input class="fi" id="fref" placeholder="Ej: YAPPY-001 o número de transacción"/></div>
+
+    <a id="btnYappy" href="${YAPPY_LINK}" target="_blank" class="btn-yappy">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5" fill="rgba(255,255,255,0.6)"/></svg>
+      Pagar $15.00 con Yappy
+    </a>
+    <button class="btn-transfer" id="btnTransfer" onclick="copiarCuenta()">📋 Copiar número de cuenta</button>
+    <button class="btn-main" id="btnConfirmar" onclick="confirmar('${dayStr}')">Confirmar mi cita</button>`;
   startTimer();
   openOv('ov-form');
 }
 
-let pagoTipo='abono';
+let pagoTipo='yappy';
 function selPago(tipo){
   pagoTipo=tipo;
-  document.getElementById('opt-abono').classList.toggle('sel',tipo==='abono');
-  document.getElementById('opt-total').classList.toggle('sel',tipo==='total');
-  const btn=document.getElementById('btnYappy');
-  if(tipo==='total'){
-    btn.href=window._linkTotal||'#';
-    btn.textContent='💚 Pagar con Yappy (tú decides el monto)';
-  } else {
-    btn.href=window._linkAbono||'#';
-    btn.textContent='💚 Pagar $15.00 con Yappy (abono)';
-  }
+  document.getElementById('opt-yappy').classList.toggle('sel',tipo==='yappy');
+  document.getElementById('opt-bank').classList.toggle('sel',tipo==='bank');
+  const btnY=document.getElementById('btnYappy');
+  const btnB=document.getElementById('btnTransfer');
+  if(tipo==='bank'){btnY.classList.add('hidden');btnB.classList.add('visible');}
+  else{btnY.classList.remove('hidden');btnB.classList.remove('visible');}
+}
+
+function copiarCuenta(){
+  navigator.clipboard.writeText('04-19-99-989328-0').then(()=>{
+    const btn=document.getElementById('btnTransfer');
+    btn.textContent='✓ Número copiado!';
+    setTimeout(()=>{btn.textContent='📋 Copiar número de cuenta';},2000);
+  });
 }
 
 function startTimer(){
   if(timerInt)clearInterval(timerInt);
   timerInt=setInterval(()=>{
     timerSecs--;
-    if(timerSecs<=0){clearInterval(timerInt);const el=document.getElementById('timerVal');if(el)el.textContent='00:00';return;}
-    const m=Math.floor(timerSecs/60), s=timerSecs%60;
     const el=document.getElementById('timerVal');
-    if(el)el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    const box=document.getElementById('timerBox');
+    const btnC=document.getElementById('btnConfirmar');
+    if(timerSecs<=0){
+      clearInterval(timerInt);
+      if(el)el.textContent='0:00';
+      if(box)box.classList.add('expired');
+      if(btnC){btnC.disabled=true;btnC.textContent='Tiempo expirado — vuelve a empezar';}
+      return;
+    }
+    const m=Math.floor(timerSecs/60), s=timerSecs%60;
+    if(el)el.textContent=m+':'+String(s).padStart(2,'0');
+    if(timerSecs<=60&&box)box.classList.add('expired');
   },1000);
 }
 
-async function confirmar(dayStr,refID){
+async function confirmar(dayStr){
   const nombre=document.getElementById('fn').value.trim();
   const tel=document.getElementById('fp').value.trim();
   const correo=document.getElementById('fe').value.trim();
   const nota=document.getElementById('fnote').value.trim();
   const ref=document.getElementById('fref').value.trim();
   if(!nombre||!tel){alert('Por favor completa tu nombre y WhatsApp.');return;}
-  if(!ref){alert('Por favor ingresa el número de comprobante del pago Yappy.');return;}
+  if(!ref){alert('Por favor ingresa el número de comprobante del pago.');return;}
   if(timerInt)clearInterval(timerInt);
-
   const cita={nombre,telefono:tel,correo,nota,servicio:curSvc.name,categoria:curSvc.cat,precioTotal:curSvc.price,fecha:dayStr,hora:selTime,comprobante:ref};
-
-  // Guardar en Google Sheets
-  try{ await Sheets.saveCita(cita); }catch(e){ console.error('Sheets error:',e); }
-
+  try{await Sheets.saveCita(cita);}catch(e){console.error('Sheets:',e);}
   const restante=(curSvc.price-15).toFixed(2);
-  const notifLink=Yappy.generarNotificacionAdmin(cita);
-  // Abrir WhatsApp a Vicelly (admin)
-  window.open(notifLink,'_blank');
-
+  const msg=`🌸 *Nueva cita — Vicelly Nails*\n\n👤 ${nombre}\n📱 ${tel}\n💅 ${curSvc.name}\n📅 ${dayStr} · ${selTime}\n💰 Total: $${curSvc.price.toFixed(2)}\n✅ Abono: $15.00\n💳 Comprobante: ${ref}${nota?'\n📝 '+nota:''}`;
+  window.open(`https://wa.me/50765224575?text=${encodeURIComponent(msg)}`,'_blank');
   document.getElementById('form-body').innerHTML=`
     <div class="success-wrap">
       <div class="s-icon">💅</div>
@@ -426,6 +468,7 @@ async function confirmar(dayStr,refID){
         <strong>Restante el día de la cita:</strong> $${restante}<br>
         <strong>Comprobante:</strong> ${ref}
       </div>
+      <p style="font-size:11px;color:#aaa;margin-bottom:1rem;">⚠️ El abono no es reembolsable si no asistes sin cancelar con anticipación.</p>
       <button class="btn-main" onclick="closeOv('ov-form')">Listo 🌸</button>
     </div>`;
 }
@@ -435,7 +478,7 @@ function closeOv(id){document.getElementById(id).classList.remove('open');}
 
 loadServices();
 renderServices();
-Sheets.initSheet();
+try{Sheets.initSheet();}catch(e){console.log('Sheets no disponible aún');}
 </script>
 </body>
 </html>
