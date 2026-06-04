@@ -217,7 +217,7 @@ function loadServices(){
   if(saved){SERVICES=JSON.parse(saved);}
 }
 
-let curSvc=null, calY, calM, selDay=null, selTime=null, timerInt=null, timerSecs=3600;
+let curSvc=null, calY, calM, selectedDay=null, selTime=null, timerInt=null, timerSecs=3600;
 
 function renderServices(){
   const cats=['Manicure','Pedicura','Combo'];
@@ -263,7 +263,7 @@ function openDetail(id){
 
 function openCal(){
   closeOv('ov-detail');
-  selDay=null; selTime=null;
+  selectedDay=null; selTime=null;
   const now=new Date(); calY=now.getFullYear(); calM=now.getMonth();
   document.getElementById('cal-svc-info').innerHTML=`<strong style="font-size:13px;color:var(--pink-dark);">${curSvc.name}</strong><br><span style="font-size:12px;color:#993556;">${curSvc.dur} · $${curSvc.price.toFixed(2)}</span>`;
   document.getElementById('timeSec').style.display='none';
@@ -286,20 +286,20 @@ function renderCal(){
     const isPast=dt<today;
     const isSun=dow===0;
     const isHoy=dt.getTime()===today.getTime();
-    const isSel=selDay===d;
+    const isSel=selectedDay===d;
     let cls='cd';
     if(isPast)cls+=' pst';
     else if(isSun)cls+=' snd';
     if(isHoy)cls+=' hoy';
     if(isSel&&!isPast&&!isSun)cls+=' sel';
     const ok=!isPast&&!isSun;
-    h+=`<div class="${cls}" ${ok?`onclick="selDay(${d})"`:''} >${d}</div>`;
+    h+=`<div class="${cls}" ${ok?`onclick="selDay2(${d})"`:''} >${d}</div>`;
   }
   document.getElementById('calGrid').innerHTML=h;
 }
 
-function selDay(d){
-  selDay=d; selTime=null;
+function selDay2(d){
+  selectedDay=d; selTime=null;
   renderCal();
   document.getElementById('timeSec').style.display='block';
   document.getElementById('btnContinue').disabled=true;
@@ -328,7 +328,7 @@ function chMo(d){
 
 function goForm(){
   closeOv('ov-cal');
-  const dayStr=`${selDay} de ${MESES[calM]} ${calY}`;
+  const dayStr=`${selectedDay} de ${MESES[calM]} ${calY}`;
   const refID='VSN-'+Date.now();
   timerSecs=3600;
   const linkAbono=Yappy.generatePaymentLink(15,'Abono cita '+curSvc.name,refID);
