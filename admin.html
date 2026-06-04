@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Vicelly Nails</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#f8f5f5;color:#2c2c2a;min-height:100vh;}
+:root{--pink:#D4537E;--pink-light:#FBEAF0;--pink-dark:#72243E;--radius:10px;--radius-lg:14px;}
+
+/* LOGIN */
+#loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+.login-box{background:white;border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;box-shadow:0 4px 24px rgba(212,83,126,.08);}
+.login-logo{text-align:center;margin-bottom:1.5rem;}
+.login-logo .lc{width:56px;height:56px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+.login-logo .lt{color:#c9a96e;font-size:20px;font-weight:500;font-family:Georgia,serif;}
+.login-logo h2{font-size:15px;font-weight:600;}
+.login-logo p{font-size:12px;color:#aaa;margin-top:3px;}
+.fg{margin-bottom:.875rem;}
+.flbl{font-size:11px;font-weight:600;color:#aaa;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;display:block;}
+.fi{width:100%;padding:10px 12px;font-size:14px;border:1.5px solid #eee;border-radius:var(--radius);font-family:inherit;transition:border-color .15s;color:#2c2c2a;}
+.fi:focus{outline:none;border-color:var(--pink);}
+.btn-main{width:100%;padding:12px;background:var(--pink);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;}
+.login-err{font-size:12px;color:#e74c3c;text-align:center;margin-top:8px;display:none;}
+
+/* APP */
+#appScreen{display:none;}
+.topbar{background:white;border-bottom:1px solid #f0eaea;padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.tlogo{width:36px;height:36px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;}
+.tlogt{color:#c9a96e;font-size:13px;font-weight:500;font-family:Georgia,serif;}
+.topbar-title{font-size:15px;font-weight:600;}
+.topbar-sub{font-size:11px;color:#aaa;}
+.logout-btn{background:none;border:1px solid #eee;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;color:#aaa;}
+
+.tabs{display:flex;border-bottom:1px solid #f0eaea;background:white;padding:0 1.25rem;}
+.tab{padding:12px 16px;font-size:13px;cursor:pointer;border:none;background:transparent;color:#aaa;border-bottom:2px solid transparent;font-weight:500;font-family:inherit;}
+.tab.active{color:var(--pink);border-bottom-color:var(--pink);}
+
+.content{padding:1.25rem;}
+
+/* MÉTRICAS */
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem;}
+@media(min-width:480px){.metrics{grid-template-columns:repeat(4,1fr);}}
+.met{background:white;border-radius:var(--radius-lg);padding:1rem;}
+.met-lbl{font-size:11px;color:#aaa;margin-bottom:4px;font-weight:500;}
+.met-val{font-size:22px;font-weight:700;color:#2c2c2a;}
+.met-sub{font-size:11px;color:var(--pink);margin-top:2px;}
+
+/* CITAS */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;}
+.sec-hdr h3{font-size:14px;font-weight:600;}
+.add-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid var(--pink);background:var(--pink-light);color:var(--pink);border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;}
+.appt-list{display:flex;flex-direction:column;gap:8px;}
+.appt{background:white;border:1px solid #f0eaea;border-radius:var(--radius-lg);padding:.875rem 1rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.appt-time{min-width:52px;text-align:center;}
+.at{font-size:14px;font-weight:700;}
+.ap{font-size:10px;color:#aaa;}
+.adiv{width:1px;background:#f0eaea;height:36px;flex-shrink:0;}
+.appt-info{flex:1;min-width:120px;}
+.acli{font-size:13px;font-weight:600;}
+.asvc{font-size:11px;color:#aaa;margin-top:2px;}
+.badge{padding:3px 9px;border-radius:999px;font-size:10px;font-weight:600;}
+.b-ok{background:#d1fae5;color:#065f46;}
+.b-pnd{background:#fef3c7;color:#92400e;}
+.b-abono{background:var(--pink-light);color:var(--pink-dark);}
+.b-cancel{background:#fee2e2;color:#991b1b;}
+.aprice{font-size:13px;font-weight:700;color:#2c2c2a;min-width:42px;text-align:right;}
+.appt-acts{display:flex;gap:4px;}
+.ab{border:1px solid #eee;background:white;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.ab:hover{border-color:var(--pink);color:var(--pink);}
+.ab.d:hover{border-color:#e74c3c;color:#e74c3c;}
+
+/* SERVICIOS */
+.svc-form{background:white;border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem;}
+.svc-form h3{font-size:14px;font-weight:600;margin-bottom:1rem;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+textarea.fi{resize:vertical;}
+select.fi{appearance:none;background:white;}
+.svc-rows{display:flex;flex-direction:column;gap:8px;}
+.svc-row{background:white;border:1px solid #f0eaea;border-radius:var(--radius-lg);padding:.875rem 1rem;display:flex;align-items:center;gap:10px;}
+.srow-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.srow-info{flex:1;}
+.srow-nm{font-size:13px;font-weight:600;}
+.srow-cat{font-size:11px;color:#aaa;margin-top:1px;}
+.srow-price{font-size:13px;font-weight:700;color:var(--pink);min-width:42px;text-align:right;}
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.tslider{position:absolute;inset:0;background:#ddd;border-radius:20px;cursor:pointer;transition:.2s;}
+.tslider:before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s;}
+.toggle input:checked+.tslider{background:var(--pink);}
+.toggle input:checked+.tslider:before{transform:translateX(16px);}
+
+/* HORARIO */
+.horario-card{background:white;border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;}
+.horario-card h3{font-size:14px;font-weight:600;margin-bottom:.875rem;}
+.day-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.dchip{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #eee;background:#f8f5f5;color:#aaa;transition:all .15s;}
+.dchip.on{background:var(--pink);color:white;border-color:var(--pink);}
+.blocked-item{background:#fff8f8;border-radius:var(--radius);padding:8px 12px;font-size:12px;color:#c0392b;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="lc"><span class="lt">VS</span></div>
+      <h2>Vicelly Sánchez Studio Nails</h2>
+      <p>Panel de administración</p>
+    </div>
+    <div class="fg"><label class="flbl">Contraseña</label><input class="fi" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <button class="btn-main" onclick="doLogin()">Ingresar</button>
+    <p class="login-err" id="loginErr">Contraseña incorrecta</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="tlogo"><span class="tlogt">VS</span></div>
+      <div><div class="topbar-title">Admin — Vicelly Nails</div><div class="topbar-sub" id="todayLbl"></div></div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Salir</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="swTab('citas')">Citas</button>
+    <button class="tab" onclick="swTab('servicios')">Servicios</button>
+    <button class="tab" onclick="swTab('horario')">Horario</button>
+  </div>
+
+  <div class="content">
+
+    <!-- CITAS -->
+    <div id="tab-citas">
+      <div class="metrics">
+        <div class="met"><div class="met-lbl">Hoy</div><div class="met-val" id="m1">—</div><div class="met-sub">citas</div></div>
+        <div class="met"><div class="met-lbl">Semana</div><div class="met-val" id="m2">—</div><div class="met-sub">confirmadas</div></div>
+        <div class="met"><div class="met-lbl">Ingresos hoy</div><div class="met-val" id="m3">—</div><div class="met-sub">estimados</div></div>
+        <div class="met"><div class="met-lbl">Servicios</div><div class="met-val" id="m4">—</div><div class="met-sub">activos</div></div>
+      </div>
+      <div class="sec-hdr">
+        <h3>Todas las citas</h3>
+        <div style="display:flex;gap:8px;">
+          <button class="add-btn" onclick="loadCitas()">↻ Actualizar</button>
+          <button class="add-btn" onclick="exportWA()">📲 Resumen</button>
+        </div>
+      </div>
+      <div class="appt-list" id="apptList"><p style="color:#aaa;font-size:13px;text-align:center;padding:2rem;">Cargando citas...</p></div>
+    </div>
+
+    <!-- SERVICIOS -->
+    <div id="tab-servicios" style="display:none;">
+      <div class="svc-form">
+        <h3>➕ Crear nuevo servicio</h3>
+        <div class="frow">
+          <div class="fg"><label class="flbl">Nombre</label><input class="fi" id="ns-name" placeholder="Ej: Nail Art"/></div>
+          <div class="fg"><label class="flbl">Categoría</label>
+            <select class="fi" id="ns-cat"><option>Manicure</option><option>Pedicura</option><option>Combo</option></select></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="flbl">Precio ($)</label><input class="fi" id="ns-price" type="number" step="0.01" placeholder="0.00"/></div>
+          <div class="fg"><label class="flbl">Duración</label><input class="fi" id="ns-dur" placeholder="Ej: 60 min"/></div>
+        </div>
+        <div class="fg"><label class="flbl">Descripción (visible en agenda)</label><textarea class="fi" id="ns-desc" rows="2" placeholder="Describe el servicio..."></textarea></div>
+        <div class="fg"><label class="flbl">¿Qué incluye? (una por línea)</label><textarea class="fi" id="ns-includes" rows="3" placeholder="Lima y forma&#10;Cutícula&#10;Esmaltado"></textarea></div>
+        <button class="btn-main" style="margin-top:8px;" onclick="createSvc()">Crear servicio — aparecerá en la agenda 💅</button>
+      </div>
+      <div class="svc-rows" id="svcList"></div>
+    </div>
+
+    <!-- HORARIO -->
+    <div id="tab-horario" style="display:none;">
+      <div class="horario-card">
+        <h3>Días de atención</h3>
+        <div class="day-chips">
+          <span class="dchip on" onclick="this.classList.toggle('on')">Lun</span>
+          <span class="dchip on" onclick="this.classList.toggle('on')">Mar</span>
+          <span class="dchip on" onclick="this.classList.toggle('on')">Mié</span>
+          <span class="dchip on" onclick="this.classList.toggle('on')">Jue</span>
+          <span class="dchip on" onclick="this.classList.toggle('on')">Vie</span>
+          <span class="dchip on" onclick="this.classList.toggle('on')">Sáb</span>
+          <span class="dchip" onclick="this.classList.toggle('on')">Dom</span>
+        </div>
+      </div>
+      <div class="horario-card">
+        <h3>Horario de atención</h3>
+        <div class="frow">
+          <div class="fg"><label class="flbl">Desde</label>
+            <select class="fi"><option>8:00 AM</option><option selected>9:00 AM</option><option>10:00 AM</option></select></div>
+          <div class="fg"><label class="flbl">Hasta</label>
+            <select class="fi"><option>5:00 PM</option><option>6:00 PM</option><option selected>7:00 PM</option><option>8:00 PM</option></select></div>
+        </div>
+        <button class="btn-main" onclick="alert('Horario guardado ✓')">Guardar horario</button>
+      </div>
+      <div class="horario-card">
+        <h3>Bloquear fecha (día libre / vacaciones)</h3>
+        <div class="frow">
+          <div class="fg"><label class="flbl">Fecha</label><input type="date" class="fi" id="bd"/></div>
+          <div class="fg"><label class="flbl">Motivo</label><input type="text" class="fi" id="br" placeholder="Día libre"/></div>
+        </div>
+        <button class="btn-main" style="margin-top:8px;" onclick="addBlock()">Bloquear fecha</button>
+        <div id="blockedList" style="margin-top:.875rem;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="yappy.js"></script>
+<script src="sheets.js"></script>
+<script>
+const ADMIN_PASS = "Nirvana07.*"; // 🔒 Cambia esta contraseña
+const DOTS={mantra:'#D4537E',mansemi:'#993556',rubgel:'#ED93B1',polynat:'#F0997B',polyext:'#D85A30',relleno:'#F5C4B3',retiro:'#888780',pedicura:'#1D9E75',pedisemi:'#0F6E56',spasemi:'#5DCAA5',jellysemi:'#9FE1CB',jellyregular:'#B5D4F4',sparegular:'#85B7EB',combo:'#7F77DD'};
+
+let SERVICES=[];
+function loadServicesAdmin(){
+  const saved=localStorage.getItem('vss_services');
+  if(saved){SERVICES=JSON.parse(saved);}
+  else{
+    // Servicios por defecto si no hay nada guardado
+    SERVICES=[
+      {id:'mantra',name:'Manicure Tradicional',cat:'Manicure',price:15,dur:'30 min',active:true,desc:'Servicio clásico de manicure.',includes:['Lima y forma','Cutícula','Esmaltado']},
+      {id:'mansemi',name:'Manicura Semipermanente',cat:'Manicure',price:25,dur:'45 min',active:true,desc:'Gel semipermanente de larga duración.',includes:['Lima y forma','Cutícula','Gel semipermanente','Curado LED']},
+      {id:'rubgel',name:'Rubber Gel',cat:'Manicure',price:30,dur:'60 min',active:true,desc:'Gel flexible de alta resistencia.',includes:['Base rubber gel','Color a elección','Curado UV/LED']},
+      {id:'polynat',name:'Polygel Uña Natural',cat:'Manicure',price:30,dur:'60 min',active:true,desc:'Polygel sobre uña natural.',includes:['Deshidratación','Polygel','Color o gel']},
+      {id:'polyext',name:'Polygel Extensión',cat:'Manicure',price:35,dur:'75 min',active:true,desc:'Extensión con polygel.',includes:['Forma/tip','Polygel','Color']},
+      {id:'relleno',name:'Relleno',cat:'Manicure',price:30,dur:'60 min',active:true,desc:'Relleno de zona de crecimiento.',includes:['Limado','Relleno','Nuevo esmaltado']},
+      {id:'retiro',name:'Retiro Manos y Pies',cat:'Manicure',price:5,dur:'20 min',active:true,desc:'Retiro seguro de esmalte.',includes:['Acetona','Retiro cuidadoso']},
+      {id:'pedicura',name:'Pedicura Regular',cat:'Pedicura',price:20,dur:'45 min',active:true,desc:'Pedicura clásica.',includes:['Remojo','Callosidades','Esmaltado']},
+      {id:'pedisemi',name:'Pedicura Semipermanente',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Pedicura con gel semipermanente.',includes:['Remojo','Cutícula','Gel semipermanente']},
+      {id:'spasemi',name:'Spa + Semipermanente',cat:'Pedicura',price:40,dur:'75 min',active:true,desc:'Spa completo + semipermanente.',includes:['Sales aromáticas','Exfoliación','Masaje','Semipermanente']},
+      {id:'jellysemi',name:'Jelly Spa + Semi',cat:'Pedicura',price:40,dur:'75 min',active:true,desc:'Baño jelly + semipermanente.',includes:['Baño jelly','Exfoliación','Masaje','Semipermanente']},
+      {id:'jellyregular',name:'Jelly Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Baño jelly + esmaltado regular.',includes:['Baño jelly','Exfoliación','Masaje','Esmaltado']},
+      {id:'sparegular',name:'Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Spa + esmaltado regular.',includes:['Sales','Exfoliación','Masaje','Esmaltado']},
+      {id:'combo',name:'Manos + Pies Semipermanente',cat:'Combo',price:45,dur:'90 min',active:true,desc:'Combo manicura y pedicura semipermanente.',includes:['Manicura semi','Pedicura semi','Curado UV/LED']},
+    ];
+    saveServices();
+  }
+}
+
+function saveServices(){
+  localStorage.setItem('vss_services',JSON.stringify(SERVICES));
+}
+
+function doLogin(){
+  const pass=document.getElementById('loginPass').value;
+  if(pass===ADMIN_PASS){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('appScreen').style.display='block';
+    initApp();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+
+function logout(){
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginPass').value='';
+}
+
+function initApp(){
+  const now=new Date();
+  const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  document.getElementById('todayLbl').textContent=`${dias[now.getDay()]}, ${now.getDate()} ${meses[now.getMonth()]} ${now.getFullYear()}`;
+  loadServicesAdmin();
+  buildSvcList();
+  loadCitas();
+  document.getElementById('m4').textContent=SERVICES.filter(s=>s.active).length;
+}
+
+function swTab(t){
+  ['citas','servicios','horario'].forEach(x=>{document.getElementById('tab-'+x).style.display=x===t?'block':'none';});
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['citas','servicios','horario'][i]===t));
+}
+
+async function loadCitas(){
+  document.getElementById('apptList').innerHTML='<p style="color:#aaa;font-size:13px;text-align:center;padding:2rem;">Cargando desde Google Sheets...</p>';
+  try{
+    const citas=await Sheets.getCitas();
+    if(!citas.length){
+      document.getElementById('apptList').innerHTML='<p style="color:#aaa;font-size:13px;text-align:center;padding:2rem;">Aún no hay citas registradas.</p>';
+      document.getElementById('m1').textContent='0';
+      document.getElementById('m2').textContent='0';
+      document.getElementById('m3').textContent='$0';
+      return;
+    }
+    const hoy=new Date().toLocaleDateString('es-PA');
+    let citasHoy=0, ingresos=0;
+    const html=citas.map((c,i)=>{
+      const isHoy=c.fecha&&c.fecha.includes(new Date().getDate()+'');
+      if(isHoy){citasHoy++;ingresos+=parseFloat((c.precioTotal||'0').replace(/[^0-9.]/g,''))||0;}
+      const statusClass=c.estado==='Confirmada'?'b-ok':c.estado==='Cancelada'?'b-cancel':c.estado==='Abono recibido'?'b-abono':'b-pnd';
+      return `<div class="appt">
+        <div class="appt-time"><div class="at">${c.hora||'—'}</div><div class="ap">${c.fecha||''}</div></div>
+        <div class="adiv"></div>
+        <div class="appt-info"><div class="acli">${c.nombre}</div><div class="asvc">${c.servicio} · ${c.telefono}</div></div>
+        <span class="badge ${statusClass}">${c.estado||'Pendiente'}</span>
+        <div class="aprice">${c.precioTotal}</div>
+        <div class="appt-acts">
+          <button class="ab" title="WhatsApp" onclick="contactarCliente('${c.telefono}','${c.nombre}','${c.servicio}','${c.fecha}','${c.hora}')">📲</button>
+          <button class="ab d" title="Cancelar" onclick="cancelarCita(${i})">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('apptList').innerHTML=html;
+    document.getElementById('m1').textContent=citasHoy;
+    document.getElementById('m2').textContent=citas.filter(c=>c.estado==='Confirmada').length;
+    document.getElementById('m3').textContent='$'+ingresos.toFixed(0);
+  } catch(e){
+    document.getElementById('apptList').innerHTML='<p style="color:#e74c3c;font-size:13px;text-align:center;padding:2rem;">Error cargando citas. Verifica la configuración del Sheet.</p>';
+  }
+}
+
+function contactarCliente(tel,nombre,svc,fecha,hora){
+  const msg=`Hola ${nombre}! 💅 Te escribo de Vicelly Sánchez Studio Nails para confirmar tu cita:\n\n*Servicio:* ${svc}\n*Fecha:* ${fecha}\n*Hora:* ${hora}\n\n¡Te esperamos! 🌸`;
+  window.open(`https://wa.me/${tel.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function cancelarCita(i){
+  if(confirm('¿Cancelar esta cita?')){
+    alert('Función de cancelación: actualiza el estado en Google Sheets directamente o implementa la Google Sheets API con OAuth para editar celdas.');
+  }
+}
+
+function exportWA(){
+  const msg=`📋 *Resumen del día — Vicelly Nails*\n\nHoy: ${document.getElementById('m1').textContent} citas\nIngresos estimados: ${document.getElementById('m3').textContent}\n\nRevisa el panel admin para más detalles.`;
+  window.open(`https://wa.me/${CONFIG.whatsapp.number}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function buildSvcList(){
+  const list=document.getElementById('svcList');
+  if(!list)return;
+  list.innerHTML=SERVICES.map(s=>`
+    <div class="svc-row">
+      <span class="srow-dot" style="background:${DOTS[s.id]||'#D4537E'}"></span>
+      <div class="srow-info">
+        <div class="srow-nm">${s.name}</div>
+        <div class="srow-cat">${s.cat} · ${s.dur}</div>
+      </div>
+      <div class="srow-price">$${s.price.toFixed(2)}</div>
+      <label class="toggle"><input type="checkbox" ${s.active?'checked':''} onchange="toggleSvc('${s.id}',this.checked)"/>
+      <span class="tslider"></span></label>
+    </div>`).join('');
+}
+
+function toggleSvc(id,val){
+  const s=SERVICES.find(x=>x.id===id);
+  if(s){s.active=val; saveServices(); document.getElementById('m4').textContent=SERVICES.filter(s=>s.active).length;}
+}
+
+function createSvc(){
+  const name=document.getElementById('ns-name').value.trim();
+  const cat=document.getElementById('ns-cat').value;
+  const price=parseFloat(document.getElementById('ns-price').value)||0;
+  const dur=document.getElementById('ns-dur').value.trim()||'60 min';
+  const desc=document.getElementById('ns-desc').value.trim()||'Servicio profesional.';
+  const incRaw=document.getElementById('ns-includes').value.trim();
+  const includes=incRaw?incRaw.split('\n').filter(l=>l.trim()):['Servicio completo'];
+  if(!name){alert('Por favor ingresa el nombre del servicio.');return;}
+  const id='svc_'+Date.now();
+  SERVICES.push({id,name,cat,price,dur,active:true,desc,includes});
+  saveServices();
+  buildSvcList();
+  document.getElementById('m4').textContent=SERVICES.filter(s=>s.active).length;
+  ['ns-name','ns-price','ns-dur','ns-desc','ns-includes'].forEach(id=>document.getElementById(id).value='');
+  alert(`✓ Servicio "${name}" creado y disponible en la agenda para clientes.`);
+}
+
+function addBlock(){
+  const d=document.getElementById('bd').value;
+  const r=document.getElementById('br').value||'Día bloqueado';
+  if(!d)return;
+  const el=document.getElementById('blockedList');
+  el.innerHTML+=`<div class="blocked-item"><span>📅 ${d} — ${r}</span><span style="cursor:pointer;" onclick="this.parentElement.remove()">✕</span></div>`;
+}
+</script>
+</body>
+</html>
