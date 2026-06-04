@@ -217,7 +217,7 @@ function loadServices(){
   if(saved){SERVICES=JSON.parse(saved);}
 }
 
-let curSvc=null, calY, calM, selectedDay=null, selTime=null, timerInt=null, timerSecs=3600;
+let curSvc=null, calY, calM, selectedDay=null, selTime=null, timerInt=null, timerSecs=300;
 
 function renderServices(){
   const cats=['Manicure','Pedicura','Combo'];
@@ -330,9 +330,10 @@ function goForm(){
   closeOv('ov-cal');
   const dayStr=`${selectedDay} de ${MESES[calM]} ${calY}`;
   const refID='VSN-'+Date.now();
-  timerSecs=3600;
-  const linkAbono=Yappy.generatePaymentLink(15,'Abono cita '+curSvc.name,refID);
-  const linkTotal=Yappy.generatePaymentLink(curSvc.price,'Pago total '+curSvc.name,refID+'-TOTAL');
+  timerSecs=300;
+  const yappyBase='https://link.yappy.com.pa/stc/2hBGYbVYhu3%2B2FnyEZag5BSk16Vdr9BZvaim7nGhYrA%3D';
+  const linkAbono=yappyBase+'&amount=15.00';
+  const linkTotal=yappyBase;
   document.getElementById('form-body').innerHTML=`
     <div style="background:var(--pink-light);border-radius:var(--radius);padding:10px 12px;margin-bottom:1rem;">
       <div style="font-size:13px;font-weight:600;color:var(--pink-dark);">${curSvc.name}</div>
@@ -347,31 +348,37 @@ function goForm(){
     <div class="fg"><label class="flbl">Nota (opcional)</label><input class="fi" id="fnote" placeholder="Diseño, color, extensiones..."/></div>
     <div class="step-row" style="margin-top:1rem;"><span class="stepn">2</span><span class="step-lbl">Abono de $15.00 para separar tu cupo</span></div>
     <div class="timer-box">
-      <div><div class="timer-val" id="timerVal">60:00</div><div class="timer-lbl">Tienes 1 hora para pagar el abono.<br>Si no se confirma, el cupo se libera.</div></div>
+      <div><div class="timer-val" id="timerVal">5:00</div><div class="timer-lbl">Tienes 5 minutos para pagar el abono.<br>Si no se confirma, el cupo se libera.</div></div>
     </div>
-    <div class="pay-opt sel" id="opt-abono">
+    <div class="pay-opt sel" id="opt-abono" onclick="selPago('abono')">
       <div class="pay-opt-title">💳 Pagar abono ($15.00)</div>
-      <div class="pay-opt-sub">Separa tu cupo pagando solo $15.00 ahora. El restante lo pagas el día de la cita.</div>
+      <div class="pay-opt-sub">Separa tu cupo con $15.00 ahora. El restante <strong>$${(curSvc.price-15).toFixed(2)}</strong> lo pagas el día de tu cita.</div>
     </div>
     <div class="pay-opt" id="opt-total" onclick="selPago('total')">
       <div class="pay-opt-title">✨ Pagar total ($${curSvc.price.toFixed(2)})</div>
-      <div class="pay-opt-sub">Paga el monto completo ahora y llega sin preocupaciones el día de tu cita.</div>
+      <div class="pay-opt-sub">Abre Yappy y paga lo que quieras — total, 50% o el monto que prefieras. El resto lo traes el día de la cita.</div>
     </div>
     <div class="fg" style="margin-top:.875rem;"><label class="flbl">N° de comprobante / referencia</label><input class="fi" id="fref" placeholder="Ej: YAPPY-20240601"/></div>
-    <a id="btnYappy" href="${linkAbono}" target="_blank" class="pay-link">💚 Pagar con Yappy</a>
-    <button class="btn-main" onclick="confirmar('${dayStr}','${refID}','${linkAbono}','${linkTotal}')">Confirmar mi cita</button>`;
-  document.getElementById('opt-abono').onclick=()=>selPago('abono',linkAbono,linkTotal);
+    <a id="btnYappy" href="${linkAbono}" target="_blank" class="pay-link">💚 Pagar $15.00 con Yappy (abono)</a>
+    <button class="btn-main" onclick="confirmar('${dayStr}','${refID}')">Confirmar mi cita</button>`;
+  window._linkAbono=linkAbono; window._linkTotal=linkTotal; window._precioTotal=curSvc.price;
   startTimer();
   openOv('ov-form');
 }
 
 let pagoTipo='abono';
-function selPago(tipo,linkAbono,linkTotal){
+function selPago(tipo){
   pagoTipo=tipo;
   document.getElementById('opt-abono').classList.toggle('sel',tipo==='abono');
   document.getElementById('opt-total').classList.toggle('sel',tipo==='total');
-  if(tipo==='total'&&linkTotal)document.getElementById('btnYappy').href=linkTotal;
-  if(tipo==='abono'&&linkAbono)document.getElementById('btnYappy').href=linkAbono;
+  const btn=document.getElementById('btnYappy');
+  if(tipo==='total'){
+    btn.href=window._linkTotal||'#';
+    btn.textContent='💚 Pagar con Yappy (tú decides el monto)';
+  } else {
+    btn.href=window._linkAbono||'#';
+    btn.textContent='💚 Pagar $15.00 con Yappy (abono)';
+  }
 }
 
 function startTimer(){
