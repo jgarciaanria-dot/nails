@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Vicelly Sánchez Studio Nails</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -50,6 +51,14 @@ body{font-family:'Inter',sans-serif;background:var(--off-white);color:#2c2c2a;mi
 .card:active{transform:scale(.97);}
 .card:nth-child(1){animation-delay:.06s;} .card:nth-child(2){animation-delay:.12s;} .card:nth-child(3){animation-delay:.18s;} .card:nth-child(4){animation-delay:.24s;}
 @keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@media(hover:hover){
+  .card:hover::before{transform:translateX(0);}
+  .card:hover{transform:translateY(-5px) scale(1.02);border-color:rgba(201,169,110,0.5);box-shadow:0 8px 24px rgba(201,169,110,0.1);}
+  .card:hover .card-icon{border-color:var(--gold);background:rgba(201,169,110,0.15);transform:scale(1.1);}
+  .card:hover .card-price{color:var(--gold);}
+  .card:hover .card-arrow{opacity:1;transform:scale(1) rotate(0deg);}
+}
+.card:active{transform:scale(.97);border-color:rgba(201,169,110,0.5);}
 
 .card-icon{width:42px;height:42px;border-radius:50%;border:1px solid rgba(201,169,110,0.35);background:rgba(201,169,110,0.07);display:flex;align-items:center;justify-content:center;margin-bottom:10px;transition:border-color .2s,background .2s,transform .3s cubic-bezier(.34,1.56,.64,1);}
 .card:hover .card-icon{border-color:var(--gold);background:rgba(201,169,110,0.15);transform:scale(1.1);}
