@@ -391,14 +391,25 @@ function goForm(){
 
     <div class="fg" style="margin-top:.875rem;"><label class="flbl">N° de comprobante / referencia</label><input class="fi" id="fref" placeholder="Ej: YAPPY-001 o número de transacción"/></div>
 
-    <a id="btnYappy" href="${YAPPY_LINK}" target="_blank" class="btn-yappy">
+    <a id="btnYappy" href="${YAPPY_LINK}" target="_blank" class="btn-yappy" onclick="mostrarMensajeRegreso()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5" fill="rgba(255,255,255,0.6)"/></svg>
       Pagar $15.00 con Yappy
     </a>
+    <div id="msgRegreso" style="display:none;background:#e8f7fd;border:1px solid #1AACE3;border-radius:10px;padding:.875rem;margin-bottom:8px;font-size:12px;color:#0f6e8a;line-height:1.6;">
+      ✅ <strong>¿Ya pagaste?</strong> Yappy no regresa automáticamente a esta página.<br>
+      Vuelve aquí, copia el número de comprobante que te mostró Yappy e ingrésalo abajo para confirmar tu cita.
+    </div>
     <button class="btn-transfer" id="btnTransfer" onclick="copiarCuenta()">📋 Copiar número de cuenta</button>
     <button class="btn-main" id="btnConfirmar" onclick="confirmar('${dayStr}')">Confirmar mi cita</button>`;
   startTimer();
   openOv('ov-form');
+}
+
+function mostrarMensajeRegreso(){
+  setTimeout(()=>{
+    const msg=document.getElementById('msgRegreso');
+    if(msg)msg.style.display='block';
+  },1500);
 }
 
 let pagoTipo='yappy';
@@ -449,8 +460,15 @@ async function confirmar(dayStr){
   if(!nombre||!tel){alert('Por favor completa tu nombre y WhatsApp.');return;}
   if(!ref){alert('Por favor ingresa el número de comprobante del pago.');return;}
   if(timerInt)clearInterval(timerInt);
+  const btnC=document.getElementById('btnConfirmar');
+  if(btnC){btnC.disabled=true;btnC.textContent='Confirmando...';}
   const cita={nombre,telefono:tel,correo,nota,servicio:curSvc.name,categoria:curSvc.cat,precioTotal:curSvc.price,fecha:dayStr,hora:selTime,comprobante:ref};
-  try{await Sheets.saveCita(cita);}catch(e){console.error('Sheets:',e);}
+  // Enviar al Apps Script sin esperar respuesta (no-cors)
+  try{
+    fetch(CONFIG.sheets.scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(cita),mode:'no-cors'});
+  }catch(e){console.error('Sheets:',e);}
+  // Esperar 1 segundo y mostrar confirmación sin importar la respuesta
+  await new Promise(r=>setTimeout(r,1000));
   const restante=(curSvc.price-15).toFixed(2);
   const msg=`🌸 *Nueva cita — Vicelly Nails*\n\n👤 ${nombre}\n📱 ${tel}\n💅 ${curSvc.name}\n📅 ${dayStr} · ${selTime}\n💰 Total: $${curSvc.price.toFixed(2)}\n✅ Abono: $15.00\n💳 Comprobante: ${ref}${nota?'\n📝 '+nota:''}`;
   window.open(`https://wa.me/50765224575?text=${encodeURIComponent(msg)}`,'_blank');
