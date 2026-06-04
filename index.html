@@ -203,7 +203,7 @@ h1{font-size:18px;font-weight:600;margin-bottom:6px;}
 <script>
 const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const TIMES=['9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30','1:00','1:30','2:00','2:30','3:00','3:30','4:00','4:30','5:00','5:30','6:00','6:30'];
-const TAKEN=['10:00','2:00'];
+const TAKEN=[];
 const YAPPY_LINK='https://link.yappy.com.pa/stc/2hBGYbVYhu3%2B2FnyEZag5BSk16Vdr9BZvaim7nGhYrA%3D';
 const DOTS={mantra:'#D4537E',mansemi:'#993556',rubgel:'#ED93B1',polynat:'#F0997B',polyext:'#D85A30',relleno:'#F5C4B3',retiro:'#888780',pedicura:'#1D9E75',pedisemi:'#0F6E56',spasemi:'#5DCAA5',jellysemi:'#9FE1CB',jellyregular:'#B5D4F4',sparegular:'#85B7EB',combo:'#7F77DD'};
 
@@ -312,19 +312,34 @@ function renderCal(){
   document.getElementById('calGrid').innerHTML=h;
 }
 
-function selDay2(d){
+async function selDay2(d){
   selectedDay=d; selTime=null;
   renderCal();
   document.getElementById('timeSec').style.display='block';
   document.getElementById('btnContinue').disabled=true;
+  document.getElementById('timeGrid').innerHTML='<p style="color:#aaa;font-size:12px;grid-column:span 4;text-align:center;padding:.5rem;">Consultando disponibilidad...</p>';
+  const fechaStr=d+' de '+MESES[calM]+' '+calY;
+  try{
+    const url=CONFIG.sheets.scriptUrl+'?horas=1&fecha='+encodeURIComponent(fechaStr);
+    const res=await fetch(url);
+    const data=await res.json();
+    window._horasOcupadas=data.ocupadas||[];
+  }catch(e){
+    console.log('No se pudo consultar disponibilidad:',e);
+    window._horasOcupadas=[];
+  }
   renderTimes();
 }
 
 function renderTimes(){
+  const ocupadas=window._horasOcupadas||[];
   document.getElementById('timeGrid').innerHTML=TIMES.map(t=>{
-    const tkn=TAKEN.includes(t);
+    const tkn=ocupadas.includes(t);
     const sel=selTime===t;
-    return `<div class="ts${tkn?' tkn':''}${sel?' sel':''}" ${!tkn?`onclick="selTime2('${t}')"`:''}>${t}</div>`;
+    const label=tkn?t+' <span style="font-size:9px;display:block;">ocupada</span>':t;
+    return '<div class="ts'+(tkn?' tkn':'')+(sel?' sel':'')+'" '+(tkn?'':'onclick="selTime2(''+t+'')"')+'>'+label+'</div>';
+  }).join('');
+}${sel?' sel':''}" ${!tkn?`onclick="selTime2('${t}')"`:''}>${t}</div>`;
   }).join('');
 }
 
