@@ -63,8 +63,8 @@ body{font-family:'Inter',sans-serif;background:var(--off-white);color:#2c2c2a;mi
 .card-icon{width:42px;height:42px;border-radius:50%;border:1px solid rgba(201,169,110,0.35);background:rgba(201,169,110,0.07);display:flex;align-items:center;justify-content:center;margin-bottom:10px;transition:border-color .2s,background .2s,transform .3s cubic-bezier(.34,1.56,.64,1);}
 .card:hover .card-icon{border-color:var(--gold);background:rgba(201,169,110,0.15);transform:scale(1.1);}
 .card-icon i{font-size:19px;color:var(--gold);}
-.card-name{font-size:12px;font-weight:500;color:#1a1a1a;margin-bottom:5px;line-height:1.35;font-family:'Cormorant Garamond',serif;font-size:14px;}
-.card-desc{font-size:11px;color:var(--gray);line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-name{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:5px;line-height:1.3;font-family:'Cormorant Garamond',serif;}
+.card-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .card-sep{height:0.5px;background:linear-gradient(to right,#F0ECE4,transparent);margin-bottom:9px;}
 .card-footer{display:flex;align-items:center;justify-content:space-between;}
 .card-price{font-size:14px;font-weight:500;color:var(--gold-dark);transition:color .2s;font-family:'Cormorant Garamond',serif;}
@@ -244,10 +244,10 @@ const YAPPY_LINK='https://link.yappy.com.pa/stc/2hBGYbVYhu3%2B2FnyEZag5BSk16Vdr9
 
 const SVC_ICONS={
   mantra:'ti-nail',mansemi:'ti-sparkles',rubgel:'ti-droplet',
-  polynat:'ti-leaf',polyext:'ti-diamond',relleno:'ti-refresh',
-  retiro:'ti-eraser',pedicura:'ti-heart',pedisemi:'ti-star',
-  spasemi:'ti-bath',jellysemi:'ti-ripple',jellyregular:'ti-wave-sine',
-  sparegular:'ti-massage',combo:'ti-crown'
+  polynat:'ti-leaf',polyext:'ti-diamond',relleno:'ti-reload',
+  retiro:'ti-square-x',pedicura:'ti-flower',pedisemi:'ti-star',
+  spasemi:'ti-droplets',jellysemi:'ti-ripple',jellyregular:'ti-wave-square',
+  sparegular:'ti-plant',combo:'ti-crown'
 };
 
 let SERVICES=[];
@@ -515,5 +515,72 @@ loadServices();
 renderServices();
 try{Sheets.initSheet();}catch(e){}
 </script>
+
+<!-- FOOTER -->
+<footer style="background:var(--black);padding:2.5rem 1.5rem 2rem;margin-top:1rem;">
+
+  <!-- Slogan -->
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div style="width:30px;height:0.5px;background:var(--gold);opacity:.5;margin:0 auto 1rem;"></div>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(255,255,255,.75);line-height:1.7;font-style:italic;max-width:280px;margin:0 auto;">
+      <!-- SLOGAN: edita este texto cada temporada -->
+      "Donde cada detalle cuenta, y tus uñas hablan por ti."
+    </p>
+    <div style="width:30px;height:0.5px;background:var(--gold);opacity:.5;margin:1rem auto 0;"></div>
+  </div>
+
+  <!-- Info grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
+
+    <!-- Horario -->
+    <div>
+      <p style="font-size:10px;font-weight:500;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Horario</p>
+      <!-- HORARIO: edita los días y horas aquí -->
+      <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.8;">
+        Lun – Sáb<br>
+        9:00 AM – 7:00 PM
+      </p>
+    </div>
+
+    <!-- Ubicación -->
+    <div>
+      <p style="font-size:10px;font-weight:500;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Ubicación</p>
+      <!-- DIRECCIÓN: edita la dirección aquí -->
+      <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.8;">
+        Obarrio<br>
+        Kenex Plaza<br>
+        Salón Plaza · Suite 113
+      </p>
+    </div>
+  </div>
+
+  <!-- Instagram -->
+  <div style="text-align:center;margin-bottom:2rem;">
+    <a href="https://www.instagram.com/nailssbymaria.studio" target="_blank" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,.05);border:0.5px solid rgba(201,169,110,.3);border-radius:999px;padding:10px 20px;transition:border-color .2s;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="#C9A96E" stroke="none"/>
+      </svg>
+      <!-- IG: edita el usuario aquí -->
+      <span style="font-size:13px;color:rgba(255,255,255,.75);font-weight:500;">@nailssbymaria.studio</span>
+    </a>
+  </div>
+
+  <!-- Divider -->
+  <div style="height:0.5px;background:linear-gradient(to right,transparent,rgba(201,169,110,.3),transparent);margin-bottom:1.25rem;"></div>
+
+  <!-- Copyright -->
+  <div style="text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">
+      <div style="width:18px;height:18px;border-radius:50%;border:1px solid rgba(201,169,110,.4);display:flex;align-items:center;justify-content:center;">
+        <span style="color:var(--gold);font-size:9px;font-family:Georgia,serif;">VS</span>
+      </div>
+      <span style="font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.06em;">VICELLY SÁNCHEZ STUDIO NAILS</span>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,.2);">Panamá · Todos los derechos reservados</p>
+  </div>
+
+</footer>
 </body>
 </html>
