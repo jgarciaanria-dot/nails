@@ -333,12 +333,17 @@ async function selDay2(d){
 
 function renderTimes(){
   const ocupadas=window._horasOcupadas||[];
-  document.getElementById('timeGrid').innerHTML=TIMES.map(t=>{
+  const grid=document.getElementById('timeGrid');
+  grid.innerHTML='';
+  TIMES.forEach(function(t){
     const tkn=ocupadas.includes(t);
     const sel=selTime===t;
-    const label=tkn?t+' <span style="font-size:9px;display:block;">ocupada</span>':t;
-    return '<div class="ts'+(tkn?' tkn':'')+(sel?' sel':'')+'" '+(tkn?'':'onclick="selTime2(''+t+'')"')+'>'+label+'</div>';
-  }).join('');
+    const div=document.createElement('div');
+    div.className='ts'+(tkn?' tkn':'')+(sel?' sel':'');
+    div.innerHTML=tkn?t+'<span style="font-size:9px;display:block;">ocupada</span>':t;
+    if(!tkn){div.onclick=function(){selTime2(t);};}
+    grid.appendChild(div);
+  });
 }
 
 function selTime2(t){
