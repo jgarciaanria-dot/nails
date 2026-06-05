@@ -60,11 +60,12 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,#F9F3E5 0%
 }
 .card:active{transform:scale(.97);border-color:rgba(201,169,110,0.5);}
 
-.card-icon{width:42px;height:42px;border-radius:50%;border:1px solid rgba(201,169,110,0.35);background:rgba(201,169,110,0.07);display:flex;align-items:center;justify-content:center;margin-bottom:10px;transition:border-color .2s,background .2s,transform .3s cubic-bezier(.34,1.56,.64,1);}
+.card-icon{width:34px;height:34px;border-radius:50%;border:1px solid rgba(201,169,110,0.35);background:rgba(201,169,110,0.07);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .2s,background .2s,transform .3s cubic-bezier(.34,1.56,.64,1);}
 .card:hover .card-icon{border-color:var(--gold);background:rgba(201,169,110,0.15);transform:scale(1.1);}
-.card-icon i{font-size:19px;color:var(--gold);}
-.card-name{font-size:17px;font-weight:600;color:#1a1a1a;margin-bottom:6px;line-height:1.3;font-family:'Cormorant Garamond',serif;}
-.card-desc{font-size:13px;color:var(--gray);line-height:1.55;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-icon i{font-size:16px;color:var(--gold);}
+.card-icon-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.card-name{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.3;font-family:'Cormorant Garamond',serif;}
+.card-desc{font-size:11px;color:var(--gray);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .card-sep{height:0.5px;background:linear-gradient(to right,#F0ECE4,transparent);margin-bottom:9px;margin-top:auto;}
 .card-footer{display:flex;align-items:center;justify-content:space-between;}
 .card-price{font-size:16px;font-weight:600;color:var(--gold-dark);transition:color .2s;font-family:'Cormorant Garamond',serif;}
@@ -119,14 +120,14 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,#F9F3E5 0%
 .cdn{text-align:center;font-size:10px;color:#bbb;padding:4px 0;letter-spacing:.04em;}
 .cd{text-align:center;font-size:12px;padding:8px 2px;border-radius:8px;cursor:pointer;transition:background .12s,color .12s;}
 .cd:active:not(.emp):not(.pst):not(.snd):not(.blk){background:#f5f0e8;color:var(--gold-dark);}
-.cd.sel{background:var(--black);color:var(--gold);font-weight:500;}
+.cd.sel{background:var(--gold);color:white;font-weight:600;}
 .cd.hoy{font-weight:600;}
 .cd.emp,.cd.pst,.cd.snd,.cd.blk{color:#ddd;cursor:default;}
 .cd.blk{text-decoration:line-through;}
 .time-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:.875rem;}
-.ts{border:0.5px solid #eee;border-radius:8px;padding:9px 3px;text-align:center;font-size:12px;cursor:pointer;transition:all .15s;}
+.ts{border:0.5px solid #E5D8B8;border-radius:8px;padding:9px 3px;text-align:center;font-size:12px;cursor:pointer;transition:all .15s;}
 .ts:hover:not(.tkn){border-color:var(--gold);color:var(--gold-dark);}
-.ts.sel{background:var(--black);color:var(--gold);border-color:var(--black);}
+.ts.sel{background:var(--gold);color:white;border-color:var(--gold);}
 .ts.tkn{opacity:.25;cursor:default;}
 
 /* FORM */
@@ -301,8 +302,7 @@ function renderServices(){
       regular.forEach(s=>{
         const icon=SVC_ICONS[s.id]||'ti-star';
         html+=`<div class="card" onclick="openDetail('${s.id}')">
-          <div class="card-icon"><i class="ti ${icon}" aria-hidden="true"></i></div>
-          <div class="card-name">${s.name}</div>
+          <div class="card-icon-row"><div class="card-icon"><i class="ti ${icon}" aria-hidden="true"></i></div><div class="card-name">${s.name}</div></div>
           <div class="card-desc">${s.desc}</div>
           <div class="card-sep"></div>
           <div class="card-footer"><span class="card-price">$${s.price.toFixed(2)}</span><span class="card-dur">${s.dur}</span></div>
@@ -351,20 +351,27 @@ function openDetail(id){
   curSvc=SERVICES.find(s=>s.id===id);
   if(!curSvc)return;
   const icon=SVC_ICONS[curSvc.id]||'ti-star';
-  const incl=curSvc.includes.map(i=>`<li>${i}</li>`).join('');
+  const incl=curSvc.includes.map(i=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;"><span style="width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;"></span>${i}</div>`).join('');
   document.getElementById('detail-title').textContent=curSvc.name;
   document.getElementById('detail-body').innerHTML=`
-    <div class="svc-banner">
-      <div class="svc-banner-icon"><i class="ti ${icon}" aria-hidden="true"></i></div>
-      <div class="svc-banner-name">${curSvc.name}</div>
-      <div class="svc-banner-meta"><span>⏱ ${curSvc.dur}</span><span>$${curSvc.price.toFixed(2)}</span></div>
+    <div style="background:var(--black);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px;">
+      <div style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,169,110,.4);background:rgba(201,169,110,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i class="ti ${icon}" style="font-size:20px;color:var(--gold);" aria-hidden="true"></i>
+      </div>
+      <div style="flex:1;">
+        <p style="font-size:18px;font-weight:600;color:white;font-family:'Cormorant Garamond',serif;line-height:1.2;">${curSvc.name}</p>
+        <div style="display:flex;gap:12px;margin-top:3px;">
+          <span style="font-size:13px;color:var(--gold);font-weight:500;">$${curSvc.price.toFixed(2)}</span>
+          <span style="font-size:13px;color:rgba(255,255,255,.4);">${curSvc.dur}</span>
+        </div>
+      </div>
     </div>
-    <p class="svc-full-desc">${curSvc.desc}</p>
+    <p style="font-size:13px;color:#555;line-height:1.65;margin-bottom:.875rem;">${curSvc.desc}</p>
     <p class="includes-title">Incluye</p>
-    <ul class="includes">${incl}</ul>
-    <div class="abono-box">
-      <div class="abono-title">Abono obligatorio para separar cupo</div>
-      <div class="abono-sub">Se requiere un abono de <strong>$15.00</strong> al agendar. <strong>No reembolsable</strong> si no asistes sin cancelar con 24h de anticipación. Tienes <strong>5 minutos</strong> para completar el pago.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:.875rem;">${incl}</div>
+    <div style="background:#FBF8F1;border:0.5px solid #E8DFC8;border-radius:var(--radius);padding:.75rem;margin-bottom:.875rem;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:16px;flex-shrink:0;">⚠️</span>
+      <p style="font-size:11px;color:#9A7F4A;line-height:1.5;"><strong>Abono $15.00</strong> obligatorio · No reembolsable · 5 min para confirmar</p>
     </div>
     <button class="btn-main" onclick="openCal()">Agendar este servicio</button>
     <button class="btn-ghost" onclick="closeOv('ov-detail')">Volver</button>`;
@@ -375,7 +382,7 @@ function openCal(){
   closeOv('ov-detail');
   selectedDay=null; selTime=null;
   const now=new Date(); calY=now.getFullYear(); calM=now.getMonth();
-  document.getElementById('cal-svc-info').innerHTML=`<div style="font-size:14px;font-weight:500;color:var(--gold);font-family:'Cormorant Garamond',serif;">${curSvc.name}</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;">${curSvc.dur} · $${curSvc.price.toFixed(2)}</div>`;
+  document.getElementById('cal-svc-info').innerHTML=`<div style="font-size:15px;font-weight:600;color:var(--gold);font-family:'Cormorant Garamond',serif;">${curSvc.name}</div><div style="display:flex;gap:10px;margin-top:4px;"><span style="font-size:13px;color:rgba(255,255,255,.7);font-weight:500;">$${curSvc.price.toFixed(2)}</span><span style="font-size:13px;color:rgba(255,255,255,.4);">${curSvc.dur}</span></div>`;
   document.getElementById('timeSec').style.display='none';
   document.getElementById('btnContinue').disabled=true;
   renderCal();
@@ -569,13 +576,14 @@ try{Sheets.initSheet();}catch(e){}
   <!-- IG -->
   <div style="padding:1.25rem;text-align:center;border-bottom:0.5px solid rgba(201,169,110,.12);">
     <p style="font-size:10px;font-weight:500;color:rgba(201,169,110,.8);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem;">Síguenos en Instagram</p>
-    <a href="https://www.instagram.com/nailssbymaria.studio" target="_blank" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:rgba(201,169,110,.07);border:0.5px solid rgba(201,169,110,.3);border-radius:999px;padding:9px 16px;">
+    <a href="https://www.instagram.com/nailssbymaria.studio" target="_blank" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:rgba(201,169,110,.07);border:0.5px solid rgba(201,169,110,.3);border-radius:999px;padding:9px 16px;margin-bottom:.625rem;">
       <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
       </div>
       <span style="font-size:12px;font-weight:500;color:rgba(255,255,255,.8);">@nailssbymaria.studio</span>
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(201,169,110,.5)" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
     </a>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(255,255,255,.5);font-style:italic;">Exclusividad, confort y belleza en cada cita.</p>
   </div>
 
   <!-- Slogan + Info + Copyright -->
