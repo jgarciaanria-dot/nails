@@ -333,8 +333,7 @@ function renderServices(){
     svcs.forEach(s=>{
       const icon=SVC_ICONS[s.id]||'ti-star';
       html+=`<div class="card" onclick="openDetail('${s.id}')">
-        <div class="card-icon"><i class="ti ${icon}" aria-hidden="true"></i></div>
-        <div class="card-name">${s.name}</div>
+        <div class="card-icon-row"><div class="card-icon"><i class="ti ${icon}" aria-hidden="true"></i></div><div class="card-name">${s.name}</div></div>
         <div class="card-desc">${s.desc}</div>
         <div class="card-sep"></div>
         <div class="card-footer"><span class="card-price">$${s.price.toFixed(2)}</span><span class="card-dur">${s.dur}</span></div>
