@@ -247,7 +247,7 @@ const SVC_ICONS={
   polynat:'ti-leaf',polyext:'ti-diamond',relleno:'ti-reload',
   retiro:'ti-square-x',pedicura:'ti-flower',pedisemi:'ti-star',
   spasemi:'ti-droplets',jellysemi:'ti-ripple',jellyregular:'ti-wave-square',
-  sparegular:'ti-plant',combo:'ti-crown'
+  sparegular:'ti-plant',combo:'ti-crown','man-cab':'ti-hand-finger','ped-cab':'ti-fish','combo-cab':'ti-gender-male'
 };
 
 let SERVICES=[];
@@ -270,6 +270,9 @@ function loadServices(){
       {id:'jellyregular',name:'Jelly Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Todos los beneficios del baño jelly hidratante más el esmaltado regular. Relajación y belleza en una sola sesión.',includes:['Baño jelly hidratante','Exfoliación','Masaje relajante','Cuidado de cutícula','Esmaltado regular a elección']},
       {id:'sparegular',name:'Spa + Regular',cat:'Pedicura',price:30,dur:'60 min',active:true,desc:'Pedicura spa con exfoliación, masaje y esmaltado regular. El cuidado completo que tus pies necesitan.',includes:['Remojo en sales','Exfoliación de talones','Masaje relajante','Cuidado de cutícula','Esmaltado regular a elección']},
       {id:'combo',name:'Manos + Pies Semipermanente',cat:'Combo',price:45,dur:'90 min',active:true,desc:'El combo más completo: manicura y pedicura semipermanente en una sola sesión. Manos y pies perfectos con el mejor precio.',includes:['Manicura semipermanente completa','Pedicura semipermanente completa','Color coordinado o diferente a elección','Curado UV/LED','Duración hasta 3 semanas']},
+      {id:'man-cab',name:'Manicure Caballero',cat:'Caballeros',price:25,dur:'25 min',active:true,desc:'Servicio profesional de manicure pensado para caballeros. Limado, cuidado de cutícula y acabado impecable.',includes:['Lima y forma de uña','Reblandecimiento de cutícula','Retiro de cutícula','Hidratación de manos','Acabado natural']},
+      {id:'ped-cab',name:'Pedicura Caballero',cat:'Caballeros',price:25,dur:'40 min',active:true,desc:'Pedicura profesional para caballeros. Remojo, retiro de callosidades y cuidado completo de uñas de los pies.',includes:['Remojo y suavizado de pies','Lima de callosidades','Lima y forma de uña del pie','Cuidado de cutícula','Acabado natural']},
+      {id:'combo-cab',name:'Combo Manos + Pies Caballero',cat:'Caballeros',price:45,dur:'60 min',active:true,desc:'El combo completo de manicure y pedicura para caballeros. Manos y pies en orden para cualquier ocasión.',includes:['Manicure caballero completo','Pedicura caballero completa','Cuidado de cutícula manos y pies','Hidratación','Acabado natural y profesional']},
     ];
   }
 }
@@ -277,11 +280,55 @@ function loadServices(){
 let curSvc=null,calY,calM,selectedDay=null,selTime=null,timerInt=null,timerSecs=300;
 
 function renderServices(){
-  const cats=['Manicure','Pedicura','Combo'];
+  const cats=['Manicure','Pedicura','Combo','Caballeros'];
   let html='';
   cats.forEach(cat=>{
     const svcs=SERVICES.filter(s=>s.cat===cat&&s.active);
     if(!svcs.length)return;
+
+    if(cat==='Caballeros'){
+      html+=`<div class="sec-label">Caballeros</div>
+      <div style="margin:0 1rem 1rem;background:var(--black);border-radius:14px;padding:1.25rem;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(201,169,110,0.1) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(201,169,110,.4);background:rgba(201,169,110,.08);display:flex;align-items:center;justify-content:center;margin:0 auto .875rem;">
+          <i class="ti ti-gender-male" style="font-size:22px;color:var(--gold);" aria-hidden="true"></i>
+        </div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:15px;color:white;font-weight:600;margin-bottom:8px;">Zona Exclusiva Caballeros</p>
+        <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.7;">Porque el cuidado personal también es cosa de hombres.<br>Disfruta nuestro combo de manos y pies y siéntete renovado.</p>
+      </div>
+      <div class="grid">`;
+      const regular=svcs.filter(s=>s.id!=='combo-cab');
+      regular.forEach(s=>{
+        const icon=SVC_ICONS[s.id]||'ti-star';
+        html+=`<div class="card" onclick="openDetail('${s.id}')">
+          <div class="card-icon"><i class="ti ${icon}" aria-hidden="true"></i></div>
+          <div class="card-name">${s.name}</div>
+          <div class="card-desc">${s.desc}</div>
+          <div class="card-sep"></div>
+          <div class="card-footer"><span class="card-price">$${s.price.toFixed(2)}</span><span class="card-dur">${s.dur}</span></div>
+          <div class="card-arrow"><i class="ti ti-arrow-right" aria-hidden="true"></i></div>
+        </div>`;
+      });
+      html+=`</div>`;
+      const combo=svcs.find(s=>s.id==='combo-cab');
+      if(combo){
+        html+=`<div style="margin:10px 1rem 0.5rem;background:white;border:1px solid rgba(201,169,110,.35);border-radius:14px;padding:1rem;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="openDetail('combo-cab')">
+          <div style="width:42px;height:42px;border-radius:50%;border:1px solid rgba(201,169,110,.4);background:rgba(201,169,110,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="ti ti-gender-male" style="font-size:20px;color:var(--gold);" aria-hidden="true"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:2px;">${combo.name}</div>
+            <div style="font-size:12px;color:var(--gray);">${combo.desc.substring(0,55)}...</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:15px;font-weight:600;color:var(--gold-dark);">$${combo.price.toFixed(2)}</div>
+            <div style="font-size:10px;color:#bbb;">${combo.dur}</div>
+          </div>
+        </div>`;
+      }
+      return;
+    }
+
     html+=`<div class="sec-label">${cat}</div><div class="grid">`;
     svcs.forEach(s=>{
       const icon=SVC_ICONS[s.id]||'ti-star';
